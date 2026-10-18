@@ -1,5 +1,7 @@
 # OpenLegal
 
+[![CI](https://github.com/ProcessAsCode/openlegal/actions/workflows/ci.yml/badge.svg)](https://github.com/ProcessAsCode/openlegal/actions/workflows/ci.yml)
+
 **The open Process-as-Code platform for legal departments** — contract &
 corporate-governance compliance monitoring ("Governance-as-Code"), built on the
 UAPF / UAS open standards and the proven OpenITSM runtime core.
