@@ -1,0 +1,6 @@
+{
+  "MOCK-SAP-4600001": {"approved_limit_eur": 1400000, "actual_spend_eur": 910000,
+    "payments": [{"date": "2026-05-28", "amount": 58333}, {"date": "2026-04-28", "amount": 58333}]},
+  "MOCK-SAP-4600002": {"approved_limit_eur": 350000, "actual_spend_eur": 304500,
+    "payments": [{"date": "2026-06-02", "amount": 14583}, {"date": "2026-05-02", "amount": 14583}]}
+}

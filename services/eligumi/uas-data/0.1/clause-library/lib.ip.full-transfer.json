@@ -1,0 +1,10 @@
+{
+  "id": "lib.ip.full-transfer",
+  "ref": "lib.ip.full-transfer@1.0",
+  "version": "1.0",
+  "category": "ip",
+  "heading": "Autortiesības un mantiskās tiesības",
+  "deontic": "obligation",
+  "prose": "Visas {{subject.system}} izstrādes rezultātā radītās mantiskās autortiesības pilnā apjomā pāriet {{party.buyer}}. Izpildītājs garantē, ka rezultāts nepārkāpj trešo personu tiesības.",
+  "bindings": ["subject.system", "party.buyer"]
+}

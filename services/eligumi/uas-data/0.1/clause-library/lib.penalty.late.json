@@ -1,0 +1,11 @@
+{
+  "id": "lib.penalty.late",
+  "ref": "lib.penalty.late@1.0",
+  "version": "1.0",
+  "category": "penalty",
+  "deontic": "obligation",
+  "heading": "Līgumsods par kavējumu",
+  "prose": "Par saistību izpildes termiņa kavējumu Izpildītājs maksā {{party.buyer}} līgumsodu {{constraints.ratePerDay}} apmērā no kavētās summas par katru nokavēto dienu, kopā nepārsniedzot {{constraints.capOfContractValue}} no līguma summas.",
+  "bindings": ["party.buyer", "constraints.ratePerDay", "constraints.capOfContractValue"],
+  "algorithmCardRef": "uapf:card:late-penalty"
+}

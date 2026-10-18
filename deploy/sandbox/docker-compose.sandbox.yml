@@ -1,0 +1,51 @@
+# Sandbox pilot overlay — Process-as-Code legal POC.
+#
+# Usage (from the repo root):
+#   docker compose -p openlegal -f docker-compose.yml \
+#                  -f deploy/sandbox/docker-compose.sandbox.yml up -d
+#
+# What the overlay changes:
+#   * adds an nginx edge in front of api + frontend + eligumi so the pilot
+#     has ONE published port instead of three;
+#   * points the LLM at a sovereign LLM behind an anonymisation gateway
+#     (openai_compat) — no traffic to any public model provider;
+#   * removes host port publication from the individual services.
+#
+# Required in .env on the sandbox host:
+#   LLM_ENDPOINT   e.g. https://llm-gateway.example.internal/v1
+#   LLM_MODEL      the model id
+#   LLM_API_KEY    key issued by the gateway operator
+#   ELIGUMI_API_KEY, ELIGUMI_UI_USER, ELIGUMI_UI_PASSWORD
+services:
+  api:
+    ports: !override []
+    environment:
+      OPENLEGAL_ENV: production
+      OPENLEGAL_DEBUG: "false"
+      OPENLEGAL_LLM_PROVIDER: openai_compat
+      OPENLEGAL_AGENT_MAX_STEPS: "12"
+
+  eligumi:
+    ports: !override []
+    environment:
+      LLM_PROVIDER: openai_compat
+
+  frontend:
+    ports: !override []
+
+  uapf-engine:
+    ports: !override []
+
+  edge:
+    image: nginx:1.27-alpine
+    container_name: openlegal-edge
+    depends_on:
+      api: { condition: service_healthy }
+      eligumi: { condition: service_healthy }
+      frontend: { condition: service_started }
+    ports:
+      - "${EDGE_BIND:-127.0.0.1}:${EDGE_PORT:-28100}:80"
+    volumes:
+      - ./deploy/sandbox/edge.nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./deploy/sandbox/nginx-forwarded-proto.conf:/etc/nginx/conf.d/00-forwarded-proto.conf:ro
+    restart: unless-stopped

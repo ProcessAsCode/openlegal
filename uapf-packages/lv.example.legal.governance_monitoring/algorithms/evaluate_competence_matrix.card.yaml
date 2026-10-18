@@ -1,0 +1,16 @@
+card_version: "1.0"
+id: alg.evaluate_competence_matrix
+name: "Competence matrix -> required approvals"
+capability: governance.evaluate
+deterministic: true
+io:
+  inputs:  {value_eur: number, material: boolean, amendment_delta_eur: "number|null"}
+  outputs: {required_approvals: "string[]"}
+implementation: dmn/competence_matrix.json (FIRST hit policy)
+tests:
+  - name: "above 1M -> full chain"
+    given: {value_eur: 1650000, material: true}
+    expect: {required_approvals: [internal_alignment, valde, padome, shareholders]}
+  - name: "350k non-material -> valde band"
+    given: {value_eur: 350000, material: false}
+    expect: {required_approvals: [internal_alignment, valde]}

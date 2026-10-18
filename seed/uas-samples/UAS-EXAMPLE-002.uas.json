@@ -1,0 +1,21 @@
+{
+  "uas_version": "0.2",
+  "id": "UAS-EXAMPLE-002",
+  "profile": "lv.example.legal",
+  "status": "example",
+  "title": "Programmaturas uzturesanas ligums (anonimizets paraugs)",
+  "note": "Mid-size contract: limit-overrun and expiry-window demo scenario.",
+  "provenance": {"source_system": "DOCUS", "docus_id": "MOCK-DOCUS-77456", "sap_contract_id": "MOCK-SAP-4600002"},
+  "parties": {
+    "pasutitajs": {"role": "customer", "name": "Example Customer SIA (sample)", "id": "customer"},
+    "izpilditajs": {"role": "supplier", "name": "Piegadatajs B (sample)", "id": "supplier_b"}
+  },
+  "lifecycle": {"effective_from": "2024-07-25", "term_months": 24, "expires": "2026-07-25", "renewal_notice_days": 60},
+  "commercials": {"currency": "EUR", "contract_value": 350000, "approved_limit": 350000},
+  "governance": {"material": false, "approvals_on_file": [{"body": "valde", "decision_no": "V-2024-072", "date": "2024-07-02"}], "approvals_missing": []},
+  "obligations": [
+    {"id": "ob.expiry", "type": "renewal", "party": "both", "rule": "renewal_decision_before_notice_window", "value": 60, "mode": "auto"},
+    {"id": "ob.payment_after_expiry", "type": "payment_control", "party": "pasutitajs", "rule": "no_payments_after_contract_end", "value": null, "mode": "auto"},
+    {"id": "ob.limit", "type": "budget_threshold", "party": "pasutitajs", "rule": "actuals_vs_approved_limit_thresholds", "value": [80, 90, 100], "mode": "auto"}
+  ]
+}

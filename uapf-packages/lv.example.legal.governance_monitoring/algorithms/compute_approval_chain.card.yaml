@@ -1,0 +1,16 @@
+card_version: "1.0"
+id: alg.compute_approval_chain
+name: "Backward/forward approval-chain scheduling"
+capability: schedule.compute_chain
+deterministic: true
+io:
+  inputs:  {deadline: date, value_eur: number, material: boolean, start: "date|null"}
+  outputs: {feasible: boolean, completion: date, slack_days: integer, milestones: "Milestone[]"}
+implementation: src/openlegal/services/scheduler.py#GovernanceScheduler.compute_chain
+tests:
+  - name: ">1M chain feasible against 2026-08-01 from 2026-06-10"
+    given: {deadline: "2026-08-01", value_eur: 1650000, material: true, start: "2026-06-10"}
+    expect: {feasible: true, completion: "2026-07-16", slack_days: 16}
+  - name: "same chain infeasible against 2026-07-01"
+    given: {deadline: "2026-07-01", value_eur: 1650000, material: true, start: "2026-06-10"}
+    expect: {feasible: false, slack_days: -15}

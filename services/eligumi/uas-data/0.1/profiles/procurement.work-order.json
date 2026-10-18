@@ -1,0 +1,8 @@
+{
+  "name": "procurement.work-order",
+  "label": "Iepirkuma darba uzdevums",
+  "labelEn": "Procurement work order",
+  "mandatorySections": ["provenance", "subject", "commercials", "terms", "serviceLevels"],
+  "requiredRoles": ["buyer", "supplier"],
+  "description": "Darba uzdevums (VTP) vispārīgās vienošanās ietvaros ar SLA matricu."
+}

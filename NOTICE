@@ -1,0 +1,35 @@
+OpenLegal
+Copyright (c) 2026 Cyberfort SIA (reg. 40203459193), Latvia.
+
+Licensed under the GNU Affero General Public License v3.0 only
+(AGPL-3.0-only) - see LICENSE.
+Part of the Process-as-Code open-source stack: https://github.com/ProcessAsCode
+
+--------------------------------------------------------------------------
+COMPONENTS AND PROVENANCE
+--------------------------------------------------------------------------
+
+services/eligumi - the UAS agreement store.
+    Derived from the agreements module of the e-invoice platform
+    (rg4444/e_invoice_Latvia), by the same author. Licensed under
+    AGPL-3.0-only as part of OpenLegal. See services/eligumi/FORK_ORIGIN.md
+    for the exact source commit.
+
+services/eligumi/uas-data/ (UAS schema, Schematron rules, profiles, clause
+library)
+    In addition to AGPL-3.0-only, these schema and rule files are also
+    available under the Apache License 2.0, the licence of the UAS
+    specification (https://github.com/UAPFormat/UAS-specification), so that
+    agreements encoded in UAS can be read, validated and implemented by
+    anyone, including in other implementations.
+
+--------------------------------------------------------------------------
+THIRD-PARTY DEPENDENCIES
+--------------------------------------------------------------------------
+
+This project depends on third-party open-source packages declared in
+pyproject.toml, frontend/web/package.json and services/eligumi/requirements.txt.
+Each remains under its own license (predominantly MIT, BSD-3-Clause and
+Apache-2.0). Nothing in the OpenLegal licence alters those terms.
+Dependencies are not vendored into this repository; they are fetched at
+build time from their respective registries.

@@ -1,0 +1,20 @@
+{
+  "id": "dmn.example.competence_matrix",
+  "name": "Corporate competence matrix (illustrative bands)",
+  "note": "Invented bands for the demo; replaced with the organisation's real matrix in Discovery.",
+  "hit_policy": "FIRST",
+  "inputs": ["value_eur", "material", "amendment_delta_eur"],
+  "outputs": ["required_approvals"],
+  "rules": [
+    {"when": {"value_eur": ">1000000"}, "then": {"required_approvals": ["internal_alignment", "valde", "padome", "shareholders"]},
+     "annotation": "Above EUR 1M: shareholder individual consent, only after Valde then Padome decisions"},
+    {"when": {"value_eur": "500000..1000000"}, "then": {"required_approvals": ["internal_alignment", "valde", "padome"]},
+     "annotation": "EUR 0.5-1M: Padome decision preceded by Valde decision"},
+    {"when": {"material": true}, "then": {"required_approvals": ["internal_alignment", "valde"]},
+     "annotation": "All material contracts: Valde decision preceded by internal alignment"},
+    {"when": {"value_eur": "100000..500000"}, "then": {"required_approvals": ["internal_alignment", "valde"]}},
+    {"when": {}, "then": {"required_approvals": ["internal_alignment"]},
+     "annotation": "Default: department-level internal alignment only"}
+  ],
+  "amendment_rule": "Evaluate against new_value (value + amendment_delta); if the band changes, the FULL new chain is required again."
+}

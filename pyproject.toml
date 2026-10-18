@@ -1,0 +1,88 @@
+[project]
+name = "openlegal"
+version = "0.1.0-alpha"
+description = "Open, Process-as-Code, AI-native IT Service Management"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "AGPL-3.0-only"}
+authors = [
+    {name = "Algomation", email = "hello@algomation.io"},
+]
+keywords = ["itsm", "incident-management", "process-as-code", "uapf", "ai", "did", "vc"]
+
+dependencies = [
+    # Web framework
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+
+    # Database
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30.0",
+    "alembic>=1.14.0",
+
+    # Cache / queue
+    "redis>=5.2.0",
+
+    # Auth
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+    "python-multipart>=0.0.18",
+
+    # HTTP client (process engine, credential issuer, LLM provider)
+    "httpx>=0.27.0",
+
+    # LLM SDKs
+    "anthropic>=0.40.0",
+
+    # Logging / observability
+    "structlog>=24.4.0",
+
+    # CLI
+    "typer>=0.15.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.27.0",
+
+    # LLM SDKs
+    "anthropic>=0.40.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "types-python-jose>=3.3.0",
+]
+
+[project.scripts]
+openlegal = "openlegal.cli:main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "RET", "SIM"]
+ignore = ["E501"]  # line too long handled by formatter
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["src"]

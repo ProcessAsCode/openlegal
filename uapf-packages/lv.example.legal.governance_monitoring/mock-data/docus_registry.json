@@ -1,0 +1,4 @@
+{
+  "MOCK-DOCUS-77123": {"uas": "UAS-EXAMPLE-001.uas.json", "classification": "For Internal Use (mock)", "category": "IT services"},
+  "MOCK-DOCUS-77456": {"uas": "UAS-EXAMPLE-002.uas.json", "classification": "For Internal Use (mock)", "category": "IT maintenance"}
+}

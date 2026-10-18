@@ -1,0 +1,31 @@
+uapf_version: "2.5.0"
+id: lv.example.legal.governance_monitoring
+name: "Contract & corporate-governance compliance monitoring (legal pilot)"
+version: 0.1.0
+level: 4
+profile: uapf-ip-orchestrated
+description: >
+  Governance-as-Code: monitors IT/commercial contracts for expiry, payments
+  after expiry, actual-spend limit overruns (SAP), and required corporate
+  approvals (Valde / Padome / shareholder chain per competence matrix), with
+  deadline-driven backward scheduling against the governance calendar.
+capabilities:
+  required:
+    - agreement.load
+    - obligation.scan
+    - ai.classify_clause
+    - dmn.evaluate
+    - docus.read
+    - sap.read_actuals
+    - governance.evaluate
+    - schedule.compute_chain
+    - notify.alert
+    - event.schedule
+data_plane:
+  uas_profile: lv.example.legal
+  agreements_dir: agreements/
+resources:
+  governance_calendar: resources/governance_calendar_rules.yaml
+  competence_matrix: dmn/competence_matrix.json
+owner: PPPA
+status: draft

@@ -1,0 +1,32 @@
+{
+  "uas_version": "0.2",
+  "id": "UAS-EXAMPLE-001",
+  "profile": "lv.example.legal",
+  "status": "example",
+  "title": "IT infrastrukturas pakalpojumu ligums (anonimizets paraugs)",
+  "note": "Anonymized sample of an IT services contract. No real customer data.",
+  "provenance": {"source_system": "DOCUS", "docus_id": "MOCK-DOCUS-77123", "sap_contract_id": "MOCK-SAP-4600001"},
+  "parties": {
+    "pasutitajs": {"role": "customer", "name": "Example Customer SIA (sample)", "id": "customer"},
+    "izpilditajs": {"role": "supplier", "name": "Piegadatajs A (sample)", "id": "supplier_a"}
+  },
+  "lifecycle": {"effective_from": "2025-01-15", "term_months": 24, "expires": "2027-01-15", "renewal_notice_days": 90},
+  "commercials": {"currency": "EUR", "contract_value": 1400000, "approved_limit": 1400000},
+  "governance": {
+    "material": true,
+    "approvals_on_file": [
+      {"body": "valde", "decision_no": "V-2024-118", "date": "2024-12-10"},
+      {"body": "padome", "decision_no": "P-2024-41", "date": "2024-12-19"}
+    ],
+    "approvals_missing": ["shareholders"],
+    "pending_amendment": {"delta_eur": 250000, "new_value": 1650000, "deadline": "2026-08-01",
+      "note": "Amendment raises value above EUR 1M band boundary again -> full chain re-approval required before 2026-08-01."}
+  },
+  "obligations": [
+    {"id": "ob.expiry", "type": "renewal", "party": "both", "rule": "renewal_decision_before_notice_window", "value": 90, "mode": "auto"},
+    {"id": "ob.payment_after_expiry", "type": "payment_control", "party": "pasutitajs", "rule": "no_payments_after_contract_end", "value": null, "mode": "auto"},
+    {"id": "ob.limit", "type": "budget_threshold", "party": "pasutitajs", "rule": "actuals_vs_approved_limit_thresholds", "value": [80, 90, 100], "mode": "auto"},
+    {"id": "ob.amendment_approval", "type": "governance_approval", "party": "pasutitajs", "rule": "competence_matrix_chain_for_amendment", "value": null, "mode": "gated"},
+    {"id": "ob.chain_completeness", "type": "governance_approval", "party": "pasutitajs", "rule": "required_approvals_on_file", "value": null, "mode": "gated"}
+  ]
+}

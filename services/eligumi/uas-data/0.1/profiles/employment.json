@@ -1,0 +1,8 @@
+{
+  "name": "employment",
+  "label": "Darba līgums",
+  "labelEn": "Employment contract",
+  "mandatorySections": ["subject", "commercials", "terms", "lifecycle"],
+  "requiredRoles": ["employer", "employee"],
+  "description": "Darba tiesisko attiecību līgums."
+}

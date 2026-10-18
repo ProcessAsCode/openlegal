@@ -1,0 +1,8 @@
+{
+  "name": "nda",
+  "label": "Konfidencialitātes līgums",
+  "labelEn": "Non-disclosure agreement",
+  "mandatorySections": ["terms"],
+  "requiredRoles": ["discloser", "recipient"],
+  "description": "Konfidencialitātes (NDA) līgums."
+}

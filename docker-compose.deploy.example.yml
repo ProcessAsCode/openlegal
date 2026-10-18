@@ -1,0 +1,65 @@
+# Deployment overlay example.
+#
+# Use this pattern when OpenLegal needs to attach to an external verifiable-
+# credential issuer + tamper-evident registry that already runs as a sibling
+# stack on the same host. Copy this file to `docker-compose.deploy.yml`,
+# adapt the network names and build context to your environment, and run:
+#
+#     docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+#
+# This file is for illustration. Adjust paths, env vars, and network names
+# for your deployment.
+
+services:
+  api:
+    environment:
+      OPENLEGAL_SDK_URL: http://openlegal-sdk:3100
+    # NOTE: do NOT attach the api service to an external network just to
+    # reach the SDK sidecar — they can share the project's default network.
+    # Cross-attaching adds a service-name alias collision (every compose
+    # service is auto-aliased by its service name on every network it
+    # joins; OpenLegal's compose service name is 'api', and if a sibling
+    # stack also has a service named 'api', the shared network resolves
+    # 'api' to BOTH containers via DNS round-robin, breaking that stack's
+    # callbacks). If you need cross-stack connectivity, attach the SDK
+    # service to the external network on one side only.
+
+  sdk:
+    # Builds from a sibling repository checkout.
+    build:
+      context: ../verifiable-credential-issuer
+    container_name: openlegal-sdk
+    ports:
+      - "127.0.0.1:13101:3100"
+    environment:
+      PORT:              "3100"
+      SECRET_KEY:        ${OPENLEGAL_SDK_SECRET}
+      SIGNING_MODE:      local
+      VERAMO_API_KEY:    ${OPENLEGAL_SDK_VERAMO_KEY}
+      REGISTRY_URL:      ${REGISTRY_URL}
+      REGISTRY_DOMAIN:   ${REGISTRY_DOMAIN}
+      REGISTRY_EMAIL:    ${REGISTRY_EMAIL}
+      REGISTRY_PASSWORD: ${REGISTRY_PASSWORD}
+      VC_HOST_BASE:      ${VC_HOST_BASE}
+      CONTEXT_ORIGIN:    ${CONTEXT_ORIGIN}
+    volumes:
+      - openlegal-sdk-data:/app/status-data
+      - openlegal-sdk-state:/app/data
+    networks:
+      default:
+      external-registry-net:
+    restart: unless-stopped
+
+volumes:
+  openlegal-sdk-data:
+  openlegal-sdk-state:
+
+networks:
+  external-trust-net:
+    external: true
+    # Set this to the name of your existing trust-layer network, e.g.
+    # `name: my-trust-stack_default`
+  external-registry-net:
+    external: true
+    # Set this to the name of your existing registry network, e.g.
+    # `name: my-registry-stack_default`

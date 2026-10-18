@@ -1,0 +1,141 @@
+# OpenLegal — public reference compose.
+#
+# Brings up the application stack standalone: api + frontend + db + cache +
+# process engine. The verifiable-credential issuer (SDK) is optional and
+# wired separately — see docker-compose.deploy.example.yml for the overlay
+# pattern that attaches OpenLegal to an external credential issuer.
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openlegal-api
+    ports:
+      - "127.0.0.1:28102:8002"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      OPENLEGAL_DB_URL:    postgresql+asyncpg://openlegal:openlegal@openlegal-db:5432/openlegal
+      OPENLEGAL_REDIS_URL: redis://openlegal-cache:6379/0
+      OPENLEGAL_UAPF_ENGINE_URL: http://openlegal-uapf-engine:4000
+      OPENLEGAL_ELIGUMI_BASE_URL: http://openlegal-eligumi:8050
+      OPENLEGAL_ELIGUMI_API_KEY: ${ELIGUMI_API_KEY:-}
+      # Agent LLM. Development: anthropic. Sandbox: openai_compat pointed at
+      # a sovereign LLM behind an anonymisation gateway.
+      OPENLEGAL_LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+      OPENLEGAL_LLM_MODEL:    ${LLM_MODEL:-claude-haiku-4-5}
+      OPENLEGAL_LLM_ENDPOINT: ${LLM_ENDPOINT:-}
+      LLM_API_KEY:            ${LLM_API_KEY:-}
+      # Set OPENLEGAL_SDK_URL in your .env or via a deploy overlay if you
+      # have an external verifiable-credential issuer to wire in. If unset,
+      # VC signing is a graceful no-op and lifecycle events are recorded
+      # without cryptographic anchors.
+    depends_on:
+      db:    { condition: service_healthy }
+      cache: { condition: service_started }
+      uapf-engine: { condition: service_healthy }
+      eligumi: { condition: service_healthy }
+    volumes:
+      - ./uapf-packages:/app/uapf-packages:ro
+      - openlegal-attachments:/data/openlegal/attachments
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8002/api/health').status==200 else 1)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend/web
+      dockerfile: Dockerfile
+    container_name: openlegal-frontend
+    ports:
+      - "127.0.0.1:28181:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # e-Līgumi — UAS agreement store (pilot component C5). Source of truth for
+  # agreements; the agent reads it through uas.* and never writes here.
+  eligumi:
+    build:
+      context: ./services/eligumi
+      dockerfile: Dockerfile
+    container_name: openlegal-eligumi
+    ports:
+      - "127.0.0.1:${ELIGUMI_PORT:-28150}:8050"
+    environment:
+      ELIGUMI_TENANT_SLUG: ${ELIGUMI_TENANT_SLUG:-demo}
+      ELIGUMI_TENANT_NAME: ${ELIGUMI_TENANT_NAME:-Demo organizācija}
+      ELIGUMI_API_KEY:     ${ELIGUMI_API_KEY:-}
+      ELIGUMI_UI_USER:     ${ELIGUMI_UI_USER:-}
+      ELIGUMI_UI_PASSWORD: ${ELIGUMI_UI_PASSWORD:-}
+      LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+      LLM_MODEL:    ${LLM_MODEL:-}
+      LLM_ENDPOINT: ${LLM_ENDPOINT:-}
+      LLM_API_KEY:  ${LLM_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - openlegal-eligumi-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8050/api/health').status==200 else 1)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: openlegal-db
+    environment:
+      POSTGRES_DB:       openlegal
+      POSTGRES_USER:     openlegal
+      POSTGRES_PASSWORD: openlegal
+    volumes:
+      - openlegal-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openlegal"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  cache:
+    image: redis:7-alpine
+    container_name: openlegal-cache
+    volumes:
+      - openlegal-cache-data:/data
+    restart: unless-stopped
+
+  uapf-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile.uapf-engine
+      args:
+        UAPF_ENGINE_REF: ${UAPF_ENGINE_REF:-main}
+    container_name: openlegal-uapf-engine
+    ports:
+      - "127.0.0.1:${UAPF_ENGINE_PORT:-14200}:4000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:4000/health',r=>process.exit(r.statusCode==200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    environment:
+      PORT: "4000"
+      UAPF_PACKAGES_DIR: /packages
+    volumes:
+      - ./uapf-packages:/packages:ro
+    restart: unless-stopped
+
+volumes:
+  openlegal-eligumi-data:
+  openlegal-db-data:
+  openlegal-cache-data:
+  openlegal-attachments:

@@ -1,0 +1,27 @@
+# Governance calendar cadence rules — Cadence-as-Code (illustrative values,
+# replaced with the organisation's real kartibas rullis data during Discovery).
+bodies:
+  internal_alignment:
+    kind: lead_time
+    lead_working_days: 5
+    label: "Iekšējie saskaņojumi"
+  valde:
+    kind: recurring
+    cadence: weekly
+    weekday: tuesday
+    submission_cutoff_working_days: 3
+    prerequisites: [internal_alignment]
+    label: "Valdes sēde"
+  padome:
+    kind: recurring
+    cadence: monthly
+    rule: first_thursday
+    submission_cutoff_working_days: 7
+    prerequisites: [valde]
+    label: "Padomes sēde"
+  shareholders:
+    kind: on_demand
+    lead_calendar_days: 14
+    prerequisites: [valde, padome]
+    label: "Dalībnieku/akcionāru piekrišana"
+overrides: []   # actual moved/cancelled sittings, maintained in the registry

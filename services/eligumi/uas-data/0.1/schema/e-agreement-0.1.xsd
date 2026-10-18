@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ea="urn:eagreement:0.1"
+           targetNamespace="urn:eagreement:0.1"
+           elementFormDefault="qualified"
+           version="0.1">
+
+  <!-- ============================ ROOT ============================ -->
+  <xs:element name="eAgreement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="identity"      type="ea:Identity"/>
+        <xs:element name="provenance"    type="ea:Provenance"    minOccurs="0"/>
+        <xs:element name="parties"       type="ea:Parties"/>
+        <xs:element name="subject"       type="ea:Subject"       minOccurs="0"/>
+        <xs:element name="commercials"   type="ea:Commercials"   minOccurs="0"/>
+        <xs:element name="terms"         type="ea:Terms"         minOccurs="0"/>
+        <xs:element name="serviceLevels" type="ea:ServiceLevels" minOccurs="0"/>
+        <xs:element name="lifecycle"     type="ea:Lifecycle"     minOccurs="0"/>
+        <xs:element name="attachments"   type="ea:Attachments"   minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" fixed="0.1"/>
+      <xs:attribute name="profile" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ========================== IDENTITY ========================== -->
+  <xs:complexType name="Identity">
+    <xs:sequence>
+      <xs:element name="agreementType" type="ea:AgreementType"/>
+      <xs:element name="title"         type="xs:string"/>
+      <xs:element name="language"      type="xs:language"/>
+      <xs:element name="status"        type="ea:Status"/>
+      <xs:element name="version"       type="xs:string" minOccurs="0"/>
+      <xs:element name="registrationNo" type="xs:string" minOccurs="0"/>
+      <xs:element name="parent"        type="ea:AgreementReference" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="signature"     type="ea:Signature" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AgreementReference">
+    <xs:sequence>
+      <xs:element name="id"           type="xs:string"/>
+      <xs:element name="relationship" type="ea:RelationshipType" minOccurs="0"/>
+      <xs:element name="label"        type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Signature">
+    <xs:sequence>
+      <xs:element name="method"         type="ea:SignatureMethod"/>
+      <xs:element name="executedAt"     type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="registrationNo" type="xs:string"   minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ========================= PROVENANCE ========================= -->
+  <xs:complexType name="Provenance">
+    <xs:sequence>
+      <xs:element name="ocid"           type="xs:string" minOccurs="0"/>
+      <xs:element name="procurement"    type="ea:Procurement" minOccurs="0"/>
+      <xs:element name="fundingSources"  minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="fundingSource" type="ea:FundingSource" maxOccurs="unbounded"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+      <xs:element name="normativeBasis" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="normativeReference" type="ea:NormativeReference" maxOccurs="unbounded"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Procurement">
+    <xs:sequence>
+      <xs:element name="system"                type="xs:string" minOccurs="0"/>
+      <xs:element name="procedureId"           type="xs:string" minOccurs="0"/>
+      <xs:element name="frameworkAgreementId"  type="xs:string" minOccurs="0"/>
+      <xs:element name="positionId"            type="xs:string" minOccurs="0"/>
+      <xs:element name="orderId"               type="xs:string" minOccurs="0"/>
+      <xs:element name="cpv"                   type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FundingSource">
+    <xs:sequence>
+      <xs:element name="instrument" type="xs:string" minOccurs="0"/>
+      <xs:element name="projectId"  type="xs:string" minOccurs="0"/>
+      <xs:element name="title"      type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NormativeReference">
+    <xs:sequence>
+      <xs:element name="eli"     type="xs:anyURI" minOccurs="0"/>
+      <xs:element name="label"   type="xs:string"/>
+      <xs:element name="version" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- =========================== PARTIES ========================== -->
+  <xs:complexType name="Parties">
+    <xs:sequence>
+      <xs:element name="party" type="ea:Party" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Party">
+    <xs:sequence>
+      <xs:element name="id"               type="xs:string" minOccurs="0"/>
+      <xs:element name="role"             type="ea:PartyRole" maxOccurs="unbounded"/>
+      <xs:element name="legalName"        type="xs:string" minOccurs="0"/>
+      <xs:element name="registrationNo"   type="xs:string" minOccurs="0"/>
+      <xs:element name="identifierScheme" type="xs:string" minOccurs="0"/>
+      <xs:element name="address"          type="xs:string" minOccurs="0"/>
+      <xs:element name="signatory"        type="xs:string" minOccurs="0"/>
+      <xs:element name="bank"             type="ea:Bank" minOccurs="0"/>
+      <xs:element name="contact"          type="ea:Contact" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Bank">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="bic"  type="xs:string" minOccurs="0"/>
+      <xs:element name="iban" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Contact">
+    <xs:sequence>
+      <xs:element name="name"  type="xs:string" minOccurs="0"/>
+      <xs:element name="email" type="xs:string" minOccurs="0"/>
+      <xs:element name="phone" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- =========================== SUBJECT ========================== -->
+  <xs:complexType name="Subject">
+    <xs:sequence>
+      <xs:element name="summary" type="xs:string" minOccurs="0"/>
+      <xs:element name="system"  type="xs:string" minOccurs="0"/>
+      <xs:element name="works"   minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="work" maxOccurs="unbounded">
+            <xs:complexType><xs:sequence>
+              <xs:element name="no"   type="xs:string" minOccurs="0"/>
+              <xs:element name="name" type="xs:string"/>
+            </xs:sequence></xs:complexType>
+          </xs:element>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ========================= COMMERCIALS ======================== -->
+  <xs:complexType name="Commercials">
+    <xs:sequence>
+      <xs:element name="currency"    type="xs:string" minOccurs="0"/>
+      <xs:element name="vatExcluded" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="pricing" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="priceLine" maxOccurs="unbounded">
+            <xs:complexType><xs:sequence>
+              <xs:element name="model" type="ea:PricingModel"/>
+              <xs:element name="unit"  type="xs:string"  minOccurs="0"/>
+              <xs:element name="rate"  type="xs:decimal" minOccurs="0"/>
+            </xs:sequence></xs:complexType>
+          </xs:element>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+      <xs:element name="ceiling" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="unit" type="xs:string"  minOccurs="0"/>
+          <xs:element name="max"  type="xs:decimal" minOccurs="0"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+      <xs:element name="paymentTerms" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="daysAfterInvoice" type="xs:integer" minOccurs="0"/>
+          <xs:element name="dayType"          type="ea:DayType" minOccurs="0"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================ TERMS =========================== -->
+  <xs:complexType name="Terms">
+    <xs:sequence>
+      <xs:element name="clause" type="ea:Clause" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Clause">
+    <xs:sequence>
+      <xs:element name="id"              type="xs:string" minOccurs="0"/>
+      <xs:element name="type"            type="ea:DeonticType"/>
+      <xs:element name="bearer"          type="xs:string" minOccurs="0"/>
+      <xs:element name="beneficiary"     type="xs:string" minOccurs="0"/>
+      <xs:element name="category"        type="ea:ClauseCategory" minOccurs="0"/>
+      <xs:element name="libraryRef"      type="xs:string" minOccurs="0"/>
+      <xs:element name="heading"         type="xs:string" minOccurs="0"/>
+      <xs:element name="statement"       type="xs:string" minOccurs="0"/>
+      <xs:element name="trigger"         type="xs:string" minOccurs="0"/>
+      <xs:element name="constraints"     type="ea:Constraints" minOccurs="0"/>
+      <xs:element name="consequence"     type="xs:string" minOccurs="0"/>
+      <xs:element name="algorithmCardRef" type="xs:string" minOccurs="0"/>
+      <xs:element name="sourceClause"    type="xs:string" minOccurs="0"/>
+      <xs:element name="normativeRef"    type="xs:anyURI" minOccurs="0"/>
+      <!-- Clause governance / review / extraction metadata -->
+      <xs:element name="riskLevel"              type="ea:RiskLevel"       minOccurs="0"/>
+      <xs:element name="fallbackPosition"       type="xs:string"          minOccurs="0"/>
+      <xs:element name="negotiability"          type="ea:Negotiability"   minOccurs="0"/>
+      <xs:element name="ownerDepartment"        type="ea:OwnerDepartment" minOccurs="0"/>
+      <xs:element name="approvalRequired"       type="xs:string"          minOccurs="0"/>
+      <xs:element name="jurisdiction"           type="xs:string"          minOccurs="0"/>
+      <xs:element name="mandatoryByLaw"         type="xs:boolean"         minOccurs="0"/>
+      <xs:element name="playbookRuleRef"        type="xs:string"          minOccurs="0"/>
+      <xs:element name="aiExtractionConfidence" type="ea:ConfidenceScore" minOccurs="0"/>
+      <xs:element name="humanReviewedBy"        type="xs:string"          minOccurs="0"/>
+      <xs:element name="sourceLocation"         type="ea:SourceLocation"  minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SourceLocation">
+    <xs:sequence>
+      <xs:element name="document"  type="xs:string" minOccurs="0"/>
+      <xs:element name="page"      type="xs:string" minOccurs="0"/>
+      <xs:element name="paragraph" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Known computational parameters + open extension for profile-specific keys -->
+  <xs:complexType name="Constraints">
+    <xs:sequence>
+      <xs:element name="ratePerDay"          type="xs:decimal" minOccurs="0"/>
+      <xs:element name="capOfContractValue"  type="xs:decimal" minOccurs="0"/>
+      <xs:element name="deadlineValue"       type="xs:decimal" minOccurs="0"/>
+      <xs:element name="deadlineUnit"        type="ea:DurationUnit" minOccurs="0"/>
+      <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" namespace="##other"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ======================== SERVICE LEVELS ====================== -->
+  <xs:complexType name="ServiceLevels">
+    <xs:sequence>
+      <xs:element name="ticketingSystem" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="type"              type="xs:string"  minOccurs="0"/>
+          <xs:element name="instanceRef"       type="xs:string"  minOccurs="0"/>
+          <xs:element name="workflowIsBinding" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+      <xs:element name="calendars" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="calendar" maxOccurs="unbounded">
+            <xs:complexType><xs:sequence>
+              <xs:element name="id"    type="xs:string"/>
+              <xs:element name="hours" type="xs:string" minOccurs="0"/>
+              <xs:element name="days"  type="xs:string" minOccurs="0"/>
+            </xs:sequence></xs:complexType>
+          </xs:element>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+      <xs:element name="classes" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="class" type="ea:ServiceLevelClass" maxOccurs="unbounded"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ServiceLevelClass">
+    <xs:sequence>
+      <xs:element name="id"               type="xs:string"/>
+      <xs:element name="priority"         type="xs:integer"/>
+      <xs:element name="label"            type="xs:string" minOccurs="0"/>
+      <xs:element name="calendar"         type="xs:string" minOccurs="0"/>
+      <xs:element name="responseTarget"   type="ea:Duration" minOccurs="0"/>
+      <xs:element name="resolutionTarget" type="ea:Duration" minOccurs="0"/>
+      <xs:element name="channels" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="channel" type="xs:string" maxOccurs="unbounded"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+      <xs:element name="billing"          type="xs:string" minOccurs="0"/>
+      <xs:element name="notes"            type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Duration">
+    <xs:sequence>
+      <xs:element name="value" type="xs:decimal" minOccurs="0"/>
+      <xs:element name="unit"  type="ea:DurationUnit"/>
+      <xs:element name="note"  type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ========================== LIFECYCLE ========================= -->
+  <xs:complexType name="Lifecycle">
+    <xs:sequence>
+      <xs:element name="effectiveFrom" type="xs:string" minOccurs="0"/>
+      <xs:element name="term" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="max"  type="xs:integer" minOccurs="0"/>
+          <xs:element name="unit" type="xs:string"  minOccurs="0"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+      <xs:element name="amendmentRule" type="xs:string" minOccurs="0"/>
+      <xs:element name="noticeRules" minOccurs="0">
+        <xs:complexType><xs:sequence>
+          <xs:element name="registeredMailDeemedReceivedDays"      type="xs:integer" minOccurs="0"/>
+          <xs:element name="electronicDeemedReceivedWorkingDays"   type="xs:integer" minOccurs="0"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+      <xs:element name="disputeResolution" type="xs:string" minOccurs="0"/>
+      <xs:element name="governingLaw"      type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ========================= ATTACHMENTS ======================== -->
+  <xs:complexType name="Attachments">
+    <xs:sequence>
+      <xs:element name="attachment" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType><xs:sequence>
+          <xs:element name="id"           type="xs:string" minOccurs="0"/>
+          <xs:element name="title"        type="xs:string"/>
+          <xs:element name="documentType" type="xs:string" minOccurs="0"/>
+          <xs:element name="uri"          type="xs:anyURI" minOccurs="0"/>
+        </xs:sequence></xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- =========================== CODE LISTS ======================= -->
+  <xs:simpleType name="AgreementType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="framework_agreement"/>
+      <xs:enumeration value="work_order"/>
+      <xs:enumeration value="standalone_contract"/>
+      <xs:enumeration value="amendment"/>
+      <xs:enumeration value="annex"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Status">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="draft"/><xs:enumeration value="offered"/>
+      <xs:enumeration value="signed"/><xs:enumeration value="active"/>
+      <xs:enumeration value="suspended"/><xs:enumeration value="terminated"/>
+      <xs:enumeration value="completed"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SignatureMethod">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="qes"/><xs:enumeration value="aes"/>
+      <xs:enumeration value="wet_ink"/><xs:enumeration value="unsigned"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PartyRole">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="party"/><xs:enumeration value="buyer"/>
+      <xs:enumeration value="supplier"/><xs:enumeration value="discloser"/>
+      <xs:enumeration value="recipient"/><xs:enumeration value="employer"/>
+      <xs:enumeration value="employee"/><xs:enumeration value="lessor"/>
+      <xs:enumeration value="lessee"/><xs:enumeration value="responsible_person"/>
+      <xs:enumeration value="subcontractor"/><xs:enumeration value="supervisor"/>
+      <xs:enumeration value="other"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DeonticType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="obligation"/>
+      <xs:enumeration value="permission"/>
+      <xs:enumeration value="prohibition"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ClauseCategory">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ip"/><xs:enumeration value="confidentiality"/>
+      <xs:enumeration value="warranty"/><xs:enumeration value="termination"/>
+      <xs:enumeration value="liability"/><xs:enumeration value="compliance"/>
+      <xs:enumeration value="payment"/><xs:enumeration value="subcontracting"/>
+      <xs:enumeration value="penalty"/><xs:enumeration value="data_protection"/>
+      <xs:enumeration value="other"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PricingModel">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="time_and_materials"/>
+      <xs:enumeration value="fixed_price"/>
+      <xs:enumeration value="subscription"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DayType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="working"/><xs:enumeration value="calendar"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DurationUnit">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="work_hour"/><xs:enumeration value="work_day"/>
+      <xs:enumeration value="calendar_hour"/><xs:enumeration value="calendar_day"/>
+      <xs:enumeration value="by_agreement"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RelationshipType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="framework"/><xs:enumeration value="amends"/>
+      <xs:enumeration value="annex_of"/><xs:enumeration value="supersedes"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RiskLevel">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="low"/><xs:enumeration value="medium"/><xs:enumeration value="high"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Negotiability">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="non_negotiable"/>
+      <xs:enumeration value="negotiable"/>
+      <xs:enumeration value="business_approval"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="OwnerDepartment">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="legal"/><xs:enumeration value="finance"/>
+      <xs:enumeration value="hr"/><xs:enumeration value="procurement"/>
+      <xs:enumeration value="it"/><xs:enumeration value="sales"/>
+      <xs:enumeration value="compliance"/><xs:enumeration value="other"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ConfidenceScore">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0"/><xs:maxInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

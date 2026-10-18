@@ -1,0 +1,8 @@
+{
+  "name": "services",
+  "label": "Pakalpojumu līgums",
+  "labelEn": "Services agreement",
+  "mandatorySections": ["subject", "commercials", "terms"],
+  "requiredRoles": ["buyer", "supplier"],
+  "description": "Vispārīgs pakalpojumu / uzturēšanas līgums ar SLA atbalstu."
+}

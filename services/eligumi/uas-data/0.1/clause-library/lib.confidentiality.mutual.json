@@ -1,0 +1,10 @@
+{
+  "id": "lib.confidentiality.mutual",
+  "ref": "lib.confidentiality.mutual@1.0",
+  "version": "1.0",
+  "category": "confidentiality",
+  "heading": "Konfidencialitāte",
+  "deontic": "obligation",
+  "prose": "Puses apņemas neizpaust trešajām personām konfidenciālo informāciju, kas iegūta līguma izpildes gaitā, gan līguma darbības laikā, gan pēc tā izbeigšanas.",
+  "bindings": []
+}

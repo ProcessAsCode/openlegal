@@ -1,0 +1,10 @@
+{
+  "id": "lib.termination.notice",
+  "ref": "lib.termination.notice@1.0",
+  "version": "1.0",
+  "category": "termination",
+  "deontic": "permission",
+  "heading": "Līguma izbeigšana",
+  "prose": "Katra Puse ir tiesīga vienpusēji izbeigt līgumu, rakstiski brīdinot otru Pusi vismaz 30 dienas iepriekš.",
+  "bindings": []
+}

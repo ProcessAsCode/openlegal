@@ -1,0 +1,20 @@
+{
+  "id": "dmn.example.obligation_action",
+  "name": "Obligation state -> action (legal pilot)",
+  "hit_policy": "FIRST",
+  "inputs": ["obligation_type", "state"],
+  "outputs": ["action", "channel", "automation"],
+  "rules": [
+    {"when": {"obligation_type": "renewal", "state": "window_open"},
+     "then": {"action": "create_renewal_task", "channel": "board+email", "automation": "auto"}},
+    {"when": {"obligation_type": "payment_control", "state": "violation"},
+     "then": {"action": "alert_payment_after_expiry", "channel": "board+email", "automation": "auto"}},
+    {"when": {"obligation_type": "budget_threshold", "state": "threshold_crossed"},
+     "then": {"action": "alert_limit_threshold", "channel": "board+email", "automation": "auto"}},
+    {"when": {"obligation_type": "governance_approval", "state": "approvals_missing"},
+     "then": {"action": "propose_agenda_items_with_schedule", "channel": "board", "automation": "gated"}},
+    {"when": {"obligation_type": "governance_approval", "state": "chain_infeasible"},
+     "then": {"action": "escalate_infeasible_chain", "channel": "board+email", "automation": "gated"}},
+    {"when": {}, "then": {"action": "none", "channel": "none", "automation": "auto"}}
+  ]
+}
