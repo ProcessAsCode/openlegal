@@ -40,13 +40,15 @@ async def test_uapf_manifest_lists_planned_capabilities() -> None:
     capability_names = {c["name"] for c in body["capabilities"]}
     assert "ai.classify" in capability_names
     assert "incident.fetch" in capability_names
-    assert "jira.mirror" in capability_names
+    # Legal-domain capabilities (contract and governance monitoring)
+    for name in ("agreement.load", "governance.evaluate", "obligation.scan", "uas.read"):
+        assert name in capability_names, name
 
 
 # --- Phase 1: model registration check ---------------------------------------
 
-def test_model_metadata_registers_18_tables() -> None:
-    """All Phase 1 models are imported and registered with Base.metadata."""
+def test_model_metadata_registers_all_tables() -> None:
+    """All models are imported and registered with Base.metadata."""
     from openlegal.models import Base
 
     table_names = set(Base.metadata.tables.keys())
@@ -69,10 +71,16 @@ def test_model_metadata_registers_18_tables() -> None:
         "uapf_executions",
         "uapf_capability_invocations",
         "audit_log",
+        "uapf_sessions",
+        "legal_agreements",
+        "agent_runs",
+        "agent_steps",
+        "agent_messages",
     }
     missing = expected - table_names
     assert not missing, f"missing tables: {missing}"
-    assert len(table_names) == 18, f"expected 18 tables, got {len(table_names)}"
+    unexpected = table_names - expected
+    assert not unexpected, f"unexpected tables (add them to this test): {unexpected}"
 
 
 def test_case_status_enum_has_expected_values() -> None:
